@@ -20,7 +20,7 @@ jobs:
       - name: Train and save pipeline
         run: python bikeshare_model/train_pipeline.py
       - name: Upload trained pipeline
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: my-trained-pipeline
           path: bikeshare_model/trained_models/*.pkl
@@ -35,7 +35,7 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: '3.12.4'
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: my-trained-pipeline
           path: bikeshare_model/trained_models
@@ -53,7 +53,7 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: '3.12.4'
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: my-trained-pipeline
           path: bikeshare_model/trained_models
@@ -61,7 +61,7 @@ jobs:
         run: pip install --upgrade build
       - name: Build package
         run: python -m build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: my-build-package
           path: dist/*.whl
@@ -74,7 +74,7 @@ jobs:
       - name: Repo Checkout
         uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: my-build-package
           path: bike_sharing_api
