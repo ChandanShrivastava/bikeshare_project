@@ -1,0 +1,59 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  train:
+   runs-on: ubuntu-latest
+   steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.12.4
+      uses: actions/setup-python@v3
+      with:
+       python-version: '3.12.4'
+    - name: Install dependencies
+      run: pip install -r requirements/requirements.txt
+    - name: Train and save pipeline
+      run: python bikeshare_model/train_pipeline.py
+    - uses: actions/upload-artifact@v2
+      with:
+       name: my-trained-pipeline
+       path: bikeshare_model/trained_models/*.pk1
+       retention-days: 1
+
+  test:
+   needs: train
+   runs-on: ubuntu-latest
+   steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.12.4
+      uses: actions/setup-python@v3
+      with:
+       python-version: '3.12.4'
+    - uses: actions/download-artifact@v2
+      with:
+       name: my-trained-pipeline
+       path: bikeshare_model/trained_models
+    - name: Install Dependencies
+      run: pip install -r requirements/test_requirements.txt
+    - name: Test with pytest
+      run: pytest
+       
+  build:
+    needs: [train, test]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12.4
+      uses: actions/setup-python@v3
+      with:
+       python-version: '3.12.4'
+    - name: Install Dependencies
+      run: |
+       make install
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag bike_sharing_api:$(date +%s)
