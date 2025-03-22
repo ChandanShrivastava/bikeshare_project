@@ -82,16 +82,14 @@ jobs:
           path: bike_sharing_api
 
       - name: Login to Docker hub
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS_TOKEN }}
-        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build the Docker image for FastAPI app
+      - name: Build and push the Docker image for FastAPI app
         run: |
           cd bike_sharing_api
-          docker build . -f Dockerfile -t bike_sharing_api:latest
-
-      - name: Push Docker image to Docker Hub
-        run: docker push $DOCKER_USER/bike_sharing_api:latest
+          docker build -t ${{ secrets.DOCKER_USER }}/bikeshare_sharing_api:latest .
+          docker push ${{ secrets.DOCKER_USER }}/bikeshare_sharing_api:latest
   
