@@ -50,12 +50,12 @@ jobs:
     needs: [train, test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python 3.12.4
         uses: actions/setup-python@v4
         with:
           python-version: '3.12.4'
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: my-trained-pipeline
           path: bikeshare_model/trained_models
@@ -63,7 +63,7 @@ jobs:
         run: pip install --upgrade build
       - name: Build package
         run: python -m build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: my-build-package
           path: dist/*.whl
