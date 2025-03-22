@@ -10,20 +10,20 @@ jobs:
   train:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.12.4
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12.4'
-      - name: Install dependencies
-        run: pip install -r requirements/requirements.txt
-      - name: Train and save pipeline
-        run: python bikeshare_model/train_pipeline.py
-      - name: Upload trained pipeline
-        uses: actions/upload-artifact@v3
-        with:
-          name: my-trained-pipeline
-          path: bikeshare_model/trained_models/*.pkl
-          retention-days: 1
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.12.4
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12.4'
+    - name: Install dependencies
+      run: pip install -r requirements/requirements.txt
+    - name: Train and save pipeline
+      run: python bikeshare_model/train_pipeline.py
+    - name: Upload trained pipeline
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-trained-pipeline
+        path: bikeshare_model/trained_models/*.pkl
+        retention-days: 1
 
   
