@@ -69,4 +69,29 @@ jobs:
           path: dist/*.whl
           retention-days: 1
 
+  push-image:
+    needs: [train, test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: my-build-package
+          path: bike_sharing_api
+
+      - name: Login to Docker hub
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS_TOKEN }}
+        run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+      - name: Build the Docker image for FastAPI app
+        run: |
+          cd bike_sharing_api
+          docker build . -f Dockerfile -t bike_sharing_api:latest
+
+      - name: Push Docker image to Docker Hub
+        run: docker push $DOCKER_USER/bike_sharing_api:latest
   
